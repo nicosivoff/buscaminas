@@ -10,7 +10,7 @@ import { Cell } from './models/cell.model';
 })
 export class AppComponent {
   title = 'buscaminas';
-  board: Board = new Board(3, 2);
+  board: Board = new Board(8, 20);
   constructor() {}
 
   ngOnInit(): void {}
@@ -19,8 +19,33 @@ export class AppComponent {
     const result = this.board.onClickCell(cell);
     if (result == GameResultEnum.LOST_GAME) {
       // Loser
+      alert('LOSER');
     } else if (result == GameResultEnum.WON_GAME) {
       // Winner
+      alert('WINNER');
     }
+  }
+
+  onRightClickCell(cell: Cell, event: any) {
+    event.preventDefault();
+    if (cell.status == 'flag') {
+      cell.status = 'open';
+    } else {
+      cell.status = 'flag';
+    }
+  }
+
+  getProximityNumberClass(proximity: number): string {
+    if (proximity == 1) {
+      return 'text-primary';
+    } else if (proximity == 2) {
+      return 'text-success';
+    } else {
+      return 'text-danger';
+    }
+  }
+
+  restartGame(): void {
+    this.board = new Board(8, 20);
   }
 }

@@ -1,10 +1,18 @@
 <table class="table-bordered">
   <tr *ngFor="let row of board.cells; index as y">
-    <td class="cursor" *ngFor="let column of row; index as x" (click)="onClickCell(column)">
-      <div>{{ y }},{{ x }}</div>
-      <div>Status: {{ column.status }}</div>
-      <div *ngIf="column.status === 'clear' && !column.mine">{{ column.proximityMines }}</div>
-      <div *ngIf="column.mine">
+    <td
+      class="cursor text-center"
+      *ngFor="let column of row; index as x"
+      (click)="onClickCell(column)"
+      (contextmenu)="onRightClickCell(column, $event)"
+    >
+      <div
+        *ngIf="column.status === 'clear' && !column.mine"
+        [ngClass]="getProximityNumberClass(column.proximityMines)"
+      >
+        {{ column.proximityMines }}
+      </div>
+      <div *ngIf="column.status === 'clear' && column.mine">
         <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
           <path
             fill="#000000"
@@ -12,6 +20,15 @@
           />
         </svg>
       </div>
+      <div *ngIf="column.status == 'flag'">
+        <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+          <path
+            fill="#000000"
+            d="M14.4,6L14,4H5V21H7V14H12.6L13,16H20V6H14.4Z"
+          />
+        </svg>
+      </div>
     </td>
   </tr>
 </table>
+<a class="btn btn-primary" (click)="restartGame()">Restart</a>

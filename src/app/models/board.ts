@@ -60,17 +60,29 @@ export class Board {
   }
 
   onClickCell(cell: Cell): GameResultEnum | void {
-    if (cell.status !== 'open') {
+    if (this.remainingCells == 0) {
+      return;
+    } else if (cell.status !== 'open') {
       return;
     } else if (cell.mine) {
+      this.clearCells();
       return GameResultEnum.LOST_GAME;
     } else {
       cell.status = 'clear';
+      // TODO: Mostrar todas las celdas alrededor si proximityMines = 0
       this.remainingCells -= 1;
       if (this.remainingCells == 0) {
         return GameResultEnum.WON_GAME;
       }
       return;
+    }
+  }
+
+  clearCells(): void {
+    for (let y = 0; y < this.cells.length; y++) {
+      for (let x = 0; x < this.cells.length; x++) {
+        this.cells[y][x].status = 'clear';
+      }
     }
   }
 }
