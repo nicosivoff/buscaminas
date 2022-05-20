@@ -1,3 +1,7 @@
+html, body{
+  background-color: blueviolet;
+}
+
 .cursor {
   cursor: pointer;
 }
@@ -5,4 +9,30 @@
 td {
   width: 32px;
   height: 32px;
+  opacity: 0.2;
+  background-color: grey;
 }
+
+td:hover {
+  opacity: 0.5;
+  background-color: white;
+}
+
+.white {
+  opacity: 1;
+  background-color: white;
+}
+
+.white:hover {
+  opacity: 1;
+  background-color: white;
+}
+
+table {
+  margin: auto;
+}
+
+.mat-card{
+  border-radius: 14px;
+}
+

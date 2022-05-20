@@ -9,8 +9,10 @@ import { Cell } from './models/cell.model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'buscaminas';
-  board: Board = new Board(8, 20);
+  title: string = 'buscaminas';
+  size: number = 15;
+  mines: number = 3;
+  board: Board = new Board(this.size, this.mines);
   constructor() {}
 
   ngOnInit(): void {}
@@ -46,6 +48,6 @@ export class AppComponent {
   }
 
   restartGame(): void {
-    this.board = new Board(8, 20);
+    this.board = new Board(this.size, this.mines);
   }
 }

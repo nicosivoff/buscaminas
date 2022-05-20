@@ -5,6 +5,16 @@ export class Board {
   cells: Cell[][] = [];
   private remainingCells = 0;
   private mineCount = 0;
+  peers = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+  ];
 
   constructor(size: number, mines: number) {
     for (let y = 0; y < size; y++) {
@@ -20,20 +30,10 @@ export class Board {
       this.getRandomCell().mine = true;
     }
 
-    const peers = [
-      [-1, -1],
-      [-1, 0],
-      [-1, 1],
-      [0, -1],
-      [0, 1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-    ];
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         let adjacentMines: number = 0;
-        peers.forEach((peer) => {
+        this.peers.forEach((peer) => {
           if (
             this.cells[y + peer[0]] &&
             this.cells[y + peer[0]][x + peer[1]] &&
@@ -71,6 +71,19 @@ export class Board {
       cell.status = 'clear';
       // TODO: Mostrar todas las celdas alrededor si proximityMines = 0
       this.remainingCells -= 1;
+      if (cell.proximityMines === 0) {
+        for (const peer of this.peers) {
+          if (
+            this.cells[cell.row + peer[0]] &&
+            this.cells[cell.row + peer[0]][cell.column + peer[1]]
+          ) {
+            this.onClickCell(
+              this.cells[cell.row + peer[0]][cell.column + peer[1]]
+            );
+          }
+        }
+      }
+
       if (this.remainingCells == 0) {
         return GameResultEnum.WON_GAME;
       }
