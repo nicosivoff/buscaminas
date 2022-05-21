@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
+import { DialogResultComponent } from './dialogs/dialog-result/dialog-result.component';
+import { DialogData } from './dialogs/models/dialog-data.model';
 import { GameResultEnum } from './enums/game-result.enum';
 import { Board } from './models/board';
 import { Cell } from './models/cell.model';
@@ -17,7 +21,7 @@ export class AppComponent {
   displayTime: any = '00:00';
   interval: any;
   firstClick: boolean = false;
-  constructor() {}
+  constructor(public dialog: MatDialog) {}
 
   onClickCell(cell: Cell) {
     const result = this.board.onClickCell(cell);
@@ -26,22 +30,32 @@ export class AppComponent {
       this.firstClick = true;
     }
     if (result == GameResultEnum.LOST_GAME) {
-      // Loser
+      const result: DialogData = new DialogData();
+      result.title = '¡ Perdiste !';
+      result.time = this.displayTime;
+      result.win = false;
+      this.openDialog(result);
+
       clearInterval(this.interval);
-      alert('LOSER');
     } else if (result == GameResultEnum.WON_GAME) {
-      // Winner
+      const result: DialogData = new DialogData();
+      result.title = '¡ Ganaste !';
+      result.time = this.displayTime;
+      result.win = true;
+      this.openDialog(result);
+
       clearInterval(this.interval);
-      alert('WINNER');
     }
   }
 
   onRightClickCell(cell: Cell, event: any) {
     event.preventDefault();
-    if (cell.status == 'flag') {
-      cell.status = 'open';
-    } else {
-      cell.status = 'flag';
+    if (cell.status !== 'clear') {
+      if (cell.status == 'flag') {
+        cell.status = 'open';
+      } else {
+        cell.status = 'flag';
+      }
     }
   }
 
@@ -81,5 +95,13 @@ export class AppComponent {
     if (minutes < 10) minutes = '0' + minutes;
     if (seconds < 10) seconds = '0' + seconds;
     return minutes + ':' + seconds;
+  }
+
+  openDialog(data: DialogData): void {
+    this.dialog.open(DialogResultComponent, {
+      width: '400px',
+      height: '200px',
+      data: { title: data.title, time: data.time, win: data.win },
+    });
   }
 }
